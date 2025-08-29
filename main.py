@@ -1,9 +1,15 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+import google.generativeai as genai
+import os
+import uvicorn
+from datetime import datetime
 
+# Initialize FastAPI app
 app = FastAPI()
 
+# Add CORS middleware (same as your Colab code)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -12,37 +18,55 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Configure Gemini API (replacing the local model)
+genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
+model = genai.GenerativeModel('gemini-2.5-flash-lite')
+
+@app.get("/")
+async def health_check():
+    return JSONResponse(content={
+        "status": "healthy",
+        "service": "SnackHack API",
+        "timestamp": datetime.now().isoformat()
+    })
+
 @app.post("/generate")
 async def generate(request: Request):
-    data = await request.json()
+    try:
+        data = await request.json()
 
-    ingredients = data.get("ingredients", "")
-    mood = data.get("mood", "any")
-    time = data.get("time", "30")
-    restrictions = data.get("restrictions", "")
+        # Extract data (same structure as your Colab code)
+        ingredients = data.get("ingredients", "")
+        mood = data.get("mood", "any")
+        time = data.get("time", "30")
+        restrictions = data.get("restrictions", "")
 
-    prompt = f"""
-You are a helpful cooking assistant. Generate one {restrictions} {mood} recipe 
-with the following ingredients - {ingredients} which I can cook in under {time} minutes.
+        # Use your exact prompt structure
+        prompt = f"""
+You are a helpful cooking assistant. Generate one {restrictions} {mood} recipe with the following ingredients - {ingredients} which I can cook in under {time} minutes.
 Include:
 - A fun title
 - Ingredient list (with possible substitutions in brackets)
 - Clear step-by-step instructions (easy to follow)
 """
 
-    messages = [{"role": "user", "content": prompt}]
-    text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
-    model_inputs = tokenizer([text], return_tensors="pt").to(model.device)
+        # Generate using Gemini instead of local model
+        response = model.generate_content(prompt)
+        content = response.text
 
-    generated_ids = model.generate(
-        **model_inputs,
-        max_new_tokens=1024,
-        do_sample=True,
-        temperature=0.9,
-        top_p=0.95
-    )
+        # Return in same format as your Colab code
+        return JSONResponse(content={"recipe": content})
+        
+    except Exception as e:
+        return JSONResponse(
+            content={"error": str(e)}, 
+            status_code=500
+        )
 
-    output_ids = generated_ids[0][len(model_inputs.input_ids[0]):].tolist()
-    content = tokenizer.decode(output_ids, skip_special_tokens=True)
+# Health check endpoint
+@app.get("/health")
+async def health():
+    return {"status": "healthy", "service": "SnackHack"}
 
-    return JSONResponse(content={"recipe": content})
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=int(os.getenv("PORT", 8000)))
