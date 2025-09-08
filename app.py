@@ -43,11 +43,26 @@ async def generate(request: Request):
 
         # Use your exact prompt structure
         prompt = f"""
-You are a helpful cooking assistant. Generate one {restrictions} {mood} recipe with the following ingredients - {ingredients} which I can cook in under {time} minutes.
-Include:
-- A fun title
-- Ingredient list (with possible substitutions in brackets)
-- Clear step-by-step instructions (easy to follow)
+You are a helpful and creative cooking assistant.
+Generate ONE recipe that matches the following criteria:
+Dietary restrictions: {restrictions} (e.g., vegetarian, vegan, gluten-free)
+Mood: {mood} (e.g., cozy, bold, refreshing, quick comfort)
+Ingredients: {ingredients}
+Time: Must be ready in under {time} minutes
+Recipe Format:
+Title: Fun, mood-matching, and catchy
+Nutrition Snapshot (estimate per serving): Calories, Protein, Carbs, Fat
+Ingredient List: List each item with possible substitutions in brackets
+Instructions: Numbered steps, conversational and friendly in tone (suitable for beginners)
+(Optional) Chef’s Tip: A short tip or variation to enhance the experience
+Constraints:
+Recipe must be doable in a home kitchen
+No rare tools or ingredients outside the list
+Avoid meat unless explicitly listed
+Prioritize creativity, clarity, and comfort
+Keep the tone fun but informative
+Output only one recipe
+Use short sentences. Be concise. Do not exceed the character limit.
 """
 
         # Generate using Gemini instead of local model
