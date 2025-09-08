@@ -49,20 +49,27 @@ Dietary restrictions: {restrictions} (e.g., vegetarian, vegan, gluten-free)
 Mood: {mood} (e.g., cozy, bold, refreshing, quick comfort)
 Ingredients: {ingredients}
 Time: Must be ready in under {time} minutes
+This recipe should follow a modular cookbook approach:
+Keep it flexible and swappable, like a building block
+Suggest smart substitutions in brackets
+Highlight how this base recipe can evolve (optionally in the Chef’s Tip)
+Assume salt, pepper, and oil are always available.
+Do NOT introduce any ingredients that are not listed in the user's input.
 Recipe Format:
 Title: Fun, mood-matching, and catchy
 Nutrition Snapshot (estimate per serving): Calories, Protein, Carbs, Fat
 Ingredient List: List each item with possible substitutions in brackets
-Instructions: Numbered steps, conversational and friendly in tone (suitable for beginners)
-(Optional) Chef’s Tip: A short tip or variation to enhance the experience
+Instructions: Numbered steps, friendly tone, beginner-friendly
+(Optional) Chef’s Tip: A short modular suggestion or variation
 Constraints:
-Recipe must be doable in a home kitchen
-No rare tools or ingredients outside the list
-Avoid meat unless explicitly listed
+Realistic and doable in a home kitchen
+Avoid rare tools or techniques
+Avoid meat unless listed
 Prioritize creativity, clarity, and comfort
 Keep the tone fun but informative
 Output only one recipe
-Use short sentences. Be concise. Do not exceed the character limit.
+Use short sentences. Be concise.
+Do not exceed the character limit.
 """
 
         # Generate using Gemini instead of local model
