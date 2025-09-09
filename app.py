@@ -45,31 +45,23 @@ async def generate(request: Request):
         prompt = f"""
 You are a helpful and creative cooking assistant.
 Generate ONE recipe that matches the following criteria:
-Dietary restrictions: {restrictions} (e.g., vegetarian, vegan, gluten-free)
-Mood: {mood} (e.g., cozy, bold, refreshing, quick comfort)
-Ingredients: {ingredients}
-Time: Must be ready in under {time} minutes
-This recipe should follow a modular cookbook approach:
-Keep it flexible and swappable, like a building block
-Suggest smart substitutions in brackets
-Highlight how this base recipe can evolve (optionally in the Chef’s Tip)
-Assume salt, pepper, and oil are always available.
-Do NOT introduce any ingredients that are not listed in the user's input.
+    Dietary restrictions: {restrictions} (e.g., vegetarian, vegan, gluten-free)
+    Mood: {mood} (e.g., cozy, bold, refreshing, quick comfort)
+    Ingredients: {ingredients}
+    Time: Must be ready in under {time} minutes
+This recipe should follow a modular cookbook style:
+Keep it flexible and swappable like a base recipe
+Show optional substitutions clearly below each ingredient as "Swap with:" lines
+    Assume salt, pepper, and oil are always available.
+    Do NOT add new ingredients unless they're a listed substitution.
+    Keep instructions clear, concise, and beginner-friendly.
+    Output should not exceed the given character limit.
 Recipe Format:
-Title: Fun, mood-matching, and catchy
-Nutrition Snapshot (estimate per serving): Calories, Protein, Carbs, Fat
-Ingredient List: List each item with possible substitutions in brackets
-Instructions: Numbered steps, friendly tone, beginner-friendly
-(Optional) Chef’s Tip: A short modular suggestion or variation
-Constraints:
-Realistic and doable in a home kitchen
-Avoid rare tools or techniques
-Avoid meat unless listed
-Prioritize creativity, clarity, and comfort
-Keep the tone fun but informative
-Output only one recipe
-Use short sentences. Be concise.
-Do not exceed the character limit.
+Title
+Nutrition Snapshot (Calories, Protein, Carbs, Fat)
+Ingredient List with clean substitutions
+Instructions (numbered steps)
+Optional: Chef’s Tip (short suggestion or variation)
 """
 
         # Generate using Gemini instead of local model
